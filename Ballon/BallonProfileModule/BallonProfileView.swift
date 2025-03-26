@@ -1,0 +1,235 @@
+import SwiftUI
+
+struct BallonProfileView: View {
+    @StateObject var ballonProfileModel =  BallonProfileViewModel()
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Image(.topMenu)
+                    .resizable()
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.168)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                
+                Text("Profile")
+                    .PlusBold(size: 26,
+                              color: Color(red: 253/255, green: 190/255, blue: 67/255))
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 21)
+                
+                Image(.wishes)
+                    .resizable()
+                    .frame(width: geometry.size.width, height: geometry.size.height * 1.041)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.74)
+                
+                ScrollView(showsIndicators: false) {
+                    VStack {
+                        VStack(spacing: 10) {
+                            Text("\(UserDefaultsManager().getName(for: UserDefaultsManager().getEmail() ?? "NAME") ?? "") \(UserDefaultsManager().getSurename(for: UserDefaultsManager().getEmail() ?? "") ?? "")")
+                                .PlusBold(size: 30,
+                                          color: Color(red: 253/255, green: 190/255, blue: 67/255))
+                            
+                            Text("\(UserDefaultsManager().getEmail() ?? "")")
+                                .Plus(size: 20,
+                                      color: Color(red: 182/255, green: 180/255, blue: 193/255))
+                        }
+                        
+                        Spacer(minLength: geometry.size.height * 0.064)
+                        
+                        ZStack {
+                            Rectangle()
+                                .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                                .cornerRadius(12)
+                                .padding(.horizontal, 20)
+                                .frame(height: geometry.size.height * 0.127)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(.white, lineWidth: 1)
+                                        .padding(.horizontal, 20)
+                                }
+                            
+                            VStack(spacing: -5) {
+                                HStack {
+                                    Text("Notification")
+                                        .PlusBold(size: 16,
+                                                  color: Color(red: 253/255, green: 190/255, blue: 67/255))
+                                        .padding(.leading, 40)
+                                        .padding(.top)
+                                    
+                                    Spacer()
+                                }
+                                
+                                Spacer()
+                                
+                                HStack {
+                                    Image(.notif)
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .padding(.leading, 40)
+                                    
+                                    Text("Pop-up Notification")
+                                        .Plus(size: 14,
+                                              color: Color(red: 182/255, green: 180/255, blue: 193/255))
+                                     
+                                    
+                                    Spacer()
+                                    
+                                    Toggle("", isOn: $ballonProfileModel.isTog)
+                                        .toggleStyle(CustomToggleStyle())
+                                        .padding(.trailing, 30)
+                                }
+                            }
+                        }
+                        
+                        Spacer(minLength: 30)
+                        
+                        ZStack {
+                            Rectangle()
+                                .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                                .cornerRadius(12)
+                                .padding(.horizontal, 20)
+                                .frame(height: geometry.size.height * 0.166)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(.white, lineWidth: 1)
+                                        .padding(.horizontal, 20)
+                                }
+                            
+                            VStack(spacing: 20) {
+                                HStack {
+                                    Text("Other")
+                                        .PlusBold(size: 16,
+                                                  color: Color(red: 253/255, green: 190/255, blue: 67/255))
+                                        .padding(.leading, 40)
+                                    
+                                    Spacer()
+                                }
+                                
+                                VStack(spacing: 12) {
+                                    
+                                    Link(destination: URL(string: "https://docs.google.com/document/d/118uiSk8vy4coglJJP4gQbrWFTO7VQozvVdxXxVtTfYk/edit?usp=sharing")!) {
+                                        HStack {
+                                            Image(.contact)
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .padding(.leading, 40)
+                                            
+                                            Text("Term of use")
+                                                .Plus(size: 12,
+                                                      color: Color(red: 182/255, green: 180/255, blue: 193/255))
+                                            
+                                            Spacer()
+                                            
+                                            Image(.chevronRight)
+                                                .resizable()
+                                                .frame(width: 18, height: 18)
+                                                .padding(.trailing, 40)
+                                        }
+                                    }
+                                    
+                                    Link(destination: URL(string: "https://www.freeprivacypolicy.com/live/94670fe3-85d3-4fd9-85c4-06c7cd7e2a66")!) {
+                                        HStack {
+                                            Image(.privacy)
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .padding(.leading, 40)
+                                            
+                                            Text("Privacy Policy")
+                                                .Plus(size: 12,
+                                                      color: Color(red: 182/255, green: 180/255, blue: 193/255))
+                                            
+                                            Spacer()
+                                            
+                                            Image(.chevronRight)
+                                                .resizable()
+                                                .frame(width: 18, height: 18)
+                                                .padding(.trailing, 40)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.vertical)
+                        }
+                        
+                        Spacer(minLength: 30)
+                        
+                        Button(action: {
+                            UserDefaultsManager().saveLoginStatus(false)
+                            ballonProfileModel.isLogOut = true
+                        }) {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal, 20)
+                                    .frame(height: 50)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(.white, lineWidth: 1)
+                                            .padding(.horizontal, 20)
+                                    }
+                                
+                                HStack {
+                                    Text("Log out")
+                                        .PlusBold(size: 16,
+                                                  color: Color(red: 253/255, green: 190/255, blue: 67/255))
+                                    Spacer()
+                                    
+                                    Image(.chevronRight)
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                }
+                                .padding(.horizontal, 40)
+                            }
+                        }
+                        .fullScreenCover(isPresented: $ballonProfileModel.isLogOut) {
+                            BallonSignUpView()
+                        }
+                        
+                        Spacer(minLength: 20)
+                        
+                        Button(action: {
+                            UserDefaultsManager().deleteAccount()
+                            ballonProfileModel.isLogOut = true
+                        }) {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal, 20)
+                                    .frame(height: 50)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(.white, lineWidth: 1)
+                                            .padding(.horizontal, 20)
+                                    }
+                                
+                                HStack {
+                                    Text("Delete account")
+                                        .PlusBold(size: 16,
+                                                  color: Color(red: 234/255, green: 32/255, blue: 62/255))
+                                    Spacer()
+                                    
+                                    Image(.chevronRight)
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                }
+                                .padding(.horizontal, 40)
+                            }
+                        }
+                        .fullScreenCover(isPresented: $ballonProfileModel.isLogOut) {
+                            BallonSignUpView()
+                        }
+                        
+                        Color(.clear)
+                            .frame(height: 60)
+                    }
+                    .padding(.top, geometry.size.height * 0.141)
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    BallonProfileView()
+}
