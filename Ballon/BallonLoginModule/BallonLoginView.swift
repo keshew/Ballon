@@ -73,15 +73,52 @@ struct BallonLoginView: View {
                             
                             Button(action: {
                                 if ballonLoginModel.validateFields() {
-                                    if UserDefaultsManager().login(email: ballonLoginModel.email, password: ballonLoginModel.password) {
-                                        if UserDefaultsManager().isFirstLaunch() {
-                                            ballonLoginModel.isOnb = true
-                                        } else {
-                                            ballonLoginModel.isTab = true
+                                    NetworkManager().loginUser(
+                                        email: ballonLoginModel.email,
+                                        password: ballonLoginModel.password
+                                    ) { result in
+                                        switch result {
+                                        case .success(let response):
+                                            if response.status == "success" {
+                                                // Успешный вход
+                                                if UserDefaultsManager().login(
+                                                    email: ballonLoginModel.email,
+                                                    password: ballonLoginModel.password
+                                                ) {
+                                                    DispatchQueue.main.async {
+                                                        if UserDefaultsManager().isFirstLaunch() {
+                                                            ballonLoginModel.isOnb = true
+                                                        } else {
+                                                            ballonLoginModel.isTab = true
+                                                        }
+                                                    }
+                                                } else {
+                                                    DispatchQueue.main.async {
+                                                        ballonLoginModel.showEmptyFieldsAlert = true
+                                                    }
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    ballonLoginModel.alertMessage = "Неправильный email или пароль"
+                                                    ballonLoginModel.showEmptyFieldsAlert = true
+                                                }
+                                            }
+                                        case .failure(let error):
+                                            DispatchQueue.main.async {
+                                                switch error {
+                                                case .invalidStatusCode(let code):
+                                                    ballonLoginModel.alertMessage = "Ошибка \(code): Сервер недоступен"
+                                                case .decodingFailed:
+                                                    ballonLoginModel.alertMessage = "Ошибка обработки данных"
+                                                default:
+                                                    ballonLoginModel.alertMessage = "Ошибка сети"
+                                                }
+                                                ballonLoginModel.showEmptyFieldsAlert = true
+                                            }
                                         }
-                                    } else {
-                                        ballonLoginModel.showEmptyFieldsAlert = true
                                     }
+                                } else {
+                                    ballonLoginModel.showEmptyFieldsAlert = true
                                 }
                             }) {
                                 ZStack {

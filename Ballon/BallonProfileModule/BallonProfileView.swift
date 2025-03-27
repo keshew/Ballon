@@ -188,8 +188,18 @@ struct BallonProfileView: View {
                         Spacer(minLength: 20)
                         
                         Button(action: {
-                            UserDefaultsManager().deleteAccount()
-                            ballonProfileModel.isLogOut = true
+                            NetworkManager().deleteUser(email: UserDefaultsManager().getEmail()!) { result in
+                                switch result {
+                                case .success(let response):
+                                    if response.status == "success" {
+                                        DispatchQueue.main.async {
+                                            ballonProfileModel.isLogOut = true
+                                        }
+                                    }
+                                case .failure(let error):
+                                    print(error)
+                                }
+                            }
                         }) {
                             ZStack {
                                 Rectangle()

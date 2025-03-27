@@ -51,14 +51,50 @@ struct BallonSignUpView: View {
                             
                             Button(action: {
                                 if ballonSignUpModel.validateFields() {
-                                    if UserDefaultsManager().register(email: ballonSignUpModel.email,
-                                                                      password: ballonSignUpModel.password,
-                                                                      name: ballonSignUpModel.name,
-                                                                      surename: ballonSignUpModel.surename) {
-                                        ballonSignUpModel.isLog = true
-                                    } else {
-                                        ballonSignUpModel.showEmptyFieldsAlert = true
+                                    NetworkManager().registerUser(
+                                        firstName: ballonSignUpModel.name,
+                                        lastName: ballonSignUpModel.surename,
+                                        email: ballonSignUpModel.email,
+                                        password: ballonSignUpModel.password
+                                    ) { result in
+                                        switch result {
+                                        case .success(let response):
+                                            if response.status == "success" {
+                                                if UserDefaultsManager().register(
+                                                    email: ballonSignUpModel.email,
+                                                    password: ballonSignUpModel.password,
+                                                    name: ballonSignUpModel.name,
+                                                    surename: ballonSignUpModel.surename
+                                                ) {
+                                                    DispatchQueue.main.async {
+                                                        ballonSignUpModel.isLog = true
+                                                    }
+                                                } else {
+                                                    DispatchQueue.main.async {
+                                                        ballonSignUpModel.showEmptyFieldsAlert = true
+                                                    }
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    ballonSignUpModel.showEmptyFieldsAlert = true
+                                                }
+                                            }
+                                        case .failure(let error):
+                                            DispatchQueue.main.async {
+                                                switch error {
+                                                case .invalidStatusCode(let code):
+                                                    ballonSignUpModel.alertMessage = "Ошибка \(code): Сервер недоступен"
+                                                case .decodingFailed:
+                                                    ballonSignUpModel.alertMessage = "Ошибка обработки данных"
+                                                default:
+                                                    ballonSignUpModel.alertMessage = "Ошибка сети"
+                                                }
+                                                ballonSignUpModel.showEmptyFieldsAlert = true
+                                            }
+                                        }
                                     }
+                                } else {
+                                    ballonSignUpModel.showEmptyFieldsAlert = true
                                 }
                             }) {
                                 ZStack {
