@@ -1,8 +1,11 @@
 import SwiftUI
+import WebKit
 
 struct BallonProfileView: View {
     @StateObject var ballonProfileModel =  BallonProfileViewModel()
-
+    @State private var showTermsOfUse = false
+    @State private var showPrivacyPolicy = false
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -69,7 +72,7 @@ struct BallonProfileView: View {
                                     Text("Pop-up Notification")
                                         .Plus(size: 14,
                                               color: Color(red: 182/255, green: 180/255, blue: 193/255))
-                                     
+                                    
                                     
                                     Spacer()
                                     
@@ -105,8 +108,9 @@ struct BallonProfileView: View {
                                 }
                                 
                                 VStack(spacing: 12) {
-                                    
-                                    Link(destination: URL(string: "https://docs.google.com/document/d/118uiSk8vy4coglJJP4gQbrWFTO7VQozvVdxXxVtTfYk/edit?usp=sharing")!) {
+                                    Button {
+                                        showTermsOfUse = true
+                                    } label: {
                                         HStack {
                                             Image(.contact)
                                                 .resizable()
@@ -125,8 +129,13 @@ struct BallonProfileView: View {
                                                 .padding(.trailing, 40)
                                         }
                                     }
+                                    .sheet(isPresented: $showTermsOfUse) {
+                                        WebView(url: URL(string: "https://docs.google.com/document/d/118uiSk8vy4coglJJP4gQbrWFTO7VQozvVdxXxVtTfYk/edit?usp=sharing")!)
+                                    }
                                     
-                                    Link(destination: URL(string: "https://www.freeprivacypolicy.com/live/94670fe3-85d3-4fd9-85c4-06c7cd7e2a66")!) {
+                                    Button {
+                                        showPrivacyPolicy = true
+                                    } label: {
                                         HStack {
                                             Image(.privacy)
                                                 .resizable()
@@ -144,6 +153,9 @@ struct BallonProfileView: View {
                                                 .frame(width: 18, height: 18)
                                                 .padding(.trailing, 40)
                                         }
+                                    }
+                                    .sheet(isPresented: $showPrivacyPolicy) {
+                                        WebView(url: URL(string: "https://www.freeprivacypolicy.com/live/94670fe3-85d3-4fd9-85c4-06c7cd7e2a66")!)
                                     }
                                 }
                             }
@@ -242,4 +254,17 @@ struct BallonProfileView: View {
 
 #Preview {
     BallonProfileView()
+}
+
+struct WebView: UIViewRepresentable {
+    let url: URL
+    
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+    
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
 }
