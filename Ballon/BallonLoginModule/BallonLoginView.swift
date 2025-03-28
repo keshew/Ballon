@@ -80,7 +80,6 @@ struct BallonLoginView: View {
                                         switch result {
                                         case .success(let response):
                                             if response.status == "success" {
-                                                // Успешный вход
                                                 if UserDefaultsManager().login(
                                                     email: ballonLoginModel.email,
                                                     password: ballonLoginModel.password
@@ -99,7 +98,7 @@ struct BallonLoginView: View {
                                                 }
                                             } else {
                                                 DispatchQueue.main.async {
-                                                    ballonLoginModel.alertMessage = "Неправильный email или пароль"
+                                                    ballonLoginModel.alertMessage = "Incorrect email or password"
                                                     ballonLoginModel.showEmptyFieldsAlert = true
                                                 }
                                             }
@@ -107,11 +106,11 @@ struct BallonLoginView: View {
                                             DispatchQueue.main.async {
                                                 switch error {
                                                 case .invalidStatusCode(let code):
-                                                    ballonLoginModel.alertMessage = "Ошибка \(code): Сервер недоступен"
+                                                    ballonLoginModel.alertMessage = "Error \(code): Server is busy"
                                                 case .decodingFailed:
-                                                    ballonLoginModel.alertMessage = "Ошибка обработки данных"
+                                                    ballonLoginModel.alertMessage = "Data error"
                                                 default:
-                                                    ballonLoginModel.alertMessage = "Ошибка сети"
+                                                    ballonLoginModel.alertMessage = "Network error"
                                                 }
                                                 ballonLoginModel.showEmptyFieldsAlert = true
                                             }
@@ -174,7 +173,7 @@ struct BallonLoginView: View {
                     }
                 }
             }
-            .alert("All fields must be filled", isPresented: $ballonLoginModel.showEmptyFieldsAlert) {
+            .alert(ballonLoginModel.alertMessage, isPresented: $ballonLoginModel.showEmptyFieldsAlert) {
                 Button("OK", role: .cancel) {}
             }
         }

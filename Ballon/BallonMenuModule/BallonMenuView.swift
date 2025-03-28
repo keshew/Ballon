@@ -57,11 +57,23 @@ struct BallonMenuView: View {
                                 .frame(width: 41, height: 41)
                         }
                         
-                        Text("\(coinCount)")
-                            .Plus(size: 25,
-                                  color: Color(red: 253/255, green: 190/255, blue: 67/255))
-                            .lineLimit(1)
-                            .frame(width: 50)
+                        TextField("0", text: Binding(
+                             get: { String(coinCount) },
+                             set: { newValue in
+                                 guard let number = Int(newValue) else {
+                                     coinCount = UserDefaults.standard.integer(forKey: "coin")
+                                     return
+                                 }
+                                 UserDefaultsManager().saveCoin(number)
+                                 coinCount = number
+                             }
+                         ))
+                        .font(.custom("PlusJakartaSans-Regular", size: 20))
+                        .minimumScaleFactor(0.8)
+                        .foregroundStyle(Color(red: 253/255, green: 190/255, blue: 67/255))
+                        .frame(width: 50)
+                        .offset(x: 5)
+                        
                         Image(.coin)
                             .resizable()
                             .frame(width: 49, height: 52)

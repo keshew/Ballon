@@ -77,17 +77,18 @@ struct BallonSignUpView: View {
                                             } else {
                                                 DispatchQueue.main.async {
                                                     ballonSignUpModel.showEmptyFieldsAlert = true
+                                                    ballonSignUpModel.alertMessage = "This email is already registered"
                                                 }
                                             }
                                         case .failure(let error):
                                             DispatchQueue.main.async {
                                                 switch error {
                                                 case .invalidStatusCode(let code):
-                                                    ballonSignUpModel.alertMessage = "Ошибка \(code): Сервер недоступен"
+                                                    ballonSignUpModel.alertMessage = "Error \(code): Server is busy"
                                                 case .decodingFailed:
-                                                    ballonSignUpModel.alertMessage = "Ошибка обработки данных"
+                                                    ballonSignUpModel.alertMessage = "Data error"
                                                 default:
-                                                    ballonSignUpModel.alertMessage = "Ошибка сети"
+                                                    ballonSignUpModel.alertMessage = "Network error"
                                                 }
                                                 ballonSignUpModel.showEmptyFieldsAlert = true
                                             }
@@ -137,7 +138,7 @@ struct BallonSignUpView: View {
                     }
                 }
             }
-            .alert("All fields must be filled", isPresented: $ballonSignUpModel.showEmptyFieldsAlert) {
+            .alert(ballonSignUpModel.alertMessage, isPresented: $ballonSignUpModel.showEmptyFieldsAlert) {
                 Button("OK", role: .cancel) {}
             }
         }
