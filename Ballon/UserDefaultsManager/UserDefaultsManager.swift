@@ -3,6 +3,21 @@ import SwiftUI
 
 class UserDefaultsManager: ObservableObject {
     
+    func enterAsGuest() {
+        let defaults = UserDefaults.standard
+        defaults.set(true, forKey: "guest")
+    }
+    
+    func isGuest() -> Bool {
+        let defaults = UserDefaults.standard
+        return defaults.bool(forKey: "guest")
+    }
+    
+    func quitQuest() {
+        let defaults = UserDefaults.standard
+        defaults.set(false, forKey: "guest")
+    }
+    
     func isFirstLaunch() -> Bool {
           let defaults = UserDefaults.standard
           let isFirstLaunch = defaults.bool(forKey: "isFirstLaunch")
@@ -50,6 +65,7 @@ class UserDefaultsManager: ObservableObject {
     func deleteAccount() {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "users")
+        defaults.removeObject(forKey: "savedBalloons")
         saveLoginStatus(false)
     }
     
@@ -75,7 +91,9 @@ class UserDefaultsManager: ObservableObject {
     }
     
     func logout() {
+        let defaults = UserDefaults.standard
         saveLoginStatus(false)
+        defaults.removeObject(forKey: "savedBalloons")
     }
     
     func saveCurrentEmail(_ email: String) {

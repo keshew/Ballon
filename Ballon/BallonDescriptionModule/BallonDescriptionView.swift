@@ -7,25 +7,45 @@ struct BallonDescriptionView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image(.topMenu)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.168)
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                    .frame(width: geometry.size.width, height: 131)
                     .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 0)
+                            .stroke(.white, lineWidth: 4)
+                            .frame(width: geometry.size.width, height: 131)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                    }
                 
-                Image(.ball)
+                Image(.balls)
                     .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.976)
+                    .frame(width: geometry.size.width, height: 760)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                    .overlay {
+                        Color(red: 2/255, green: 74/255, blue: 92/255)
+                            .frame(width: geometry.size.width, height: 760)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                            .opacity(0.97)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 0)
+                                    .stroke(.white, lineWidth: 2)
+                                    .frame(width: geometry.size.width, height: 760)
+                                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                            }
+                    }
                 
-                Image(.shadow)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.976)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
-                
-                Image(.loginRectangle)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.544)
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.554)
+                    .cornerRadius(40)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 1.3)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.white, lineWidth: 2)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.554)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.3)
+                    }
                 
                 ScrollView(showsIndicators: false) {
                     VStack {

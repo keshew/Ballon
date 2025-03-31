@@ -11,15 +11,22 @@ struct BallonLoginView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.57)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 4.9)
                 
-                Image(.loginRectangle)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.63)
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.85)
+                    .cornerRadius(40)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 1.31)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.white, lineWidth: 2)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.85)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.31)
+                    }
                 
                 ScrollView(showsIndicators: false) {
                     VStack {
-                        Spacer(minLength: 350)
-                        VStack(spacing: 25) {
+                        Spacer(minLength: 290)
+                        VStack(spacing: 20) {
                             VStack(spacing: 15) {
                                 Text("Login")
                                     .PlusBold(size: 26)
@@ -132,8 +139,8 @@ struct BallonLoginView: View {
                                                 .padding(.horizontal, 25)
                                         }
                                     
-                                    Text("Sign up for free")
-                                        .Plus(size: 14)
+                                    Text("Join now")
+                                        .PlusBold(size: 14)
                                 }
                             }
                             .fullScreenCover(isPresented: $ballonLoginModel.isOnb) {
@@ -143,6 +150,36 @@ struct BallonLoginView: View {
                                 BallonTabBarView()
                             }
                             
+                            Button(action: {
+                                UserDefaultsManager().enterAsGuest()
+                                if UserDefaultsManager().isFirstLaunch() {
+                                    ballonLoginModel.isOnb = true
+                                } else {
+                                    ballonLoginModel.isTab = true
+                                }
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .fill(Color(red: 128/255, green: 79/255, blue: 0/255))
+                                        .frame(height: 54)
+                                        .cornerRadius(12)
+                                        .padding(.horizontal, 100)
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(.white, lineWidth: 1)
+                                                .padding(.horizontal, 100)
+                                        }
+                                    
+                                    Text("Log in as guest")
+                                        .PlusBold(size: 14)
+                                }
+                            }
+                            .fullScreenCover(isPresented: $ballonLoginModel.isTab) {
+                                BallonTabBarView()
+                            }
+                            .fullScreenCover(isPresented: $ballonLoginModel.isOnb) {
+                                BallonOnboardingView()
+                            }
                             
                             Button(action: {
                                 ballonLoginModel.isSign = true
@@ -155,13 +192,13 @@ struct BallonLoginView: View {
                             }
                             
                             HStack {
-                                Text("Join us before?")
+                                Text("First time here?")
                                     .Plus(size: 14, color: Color(red: 217/255, green: 223/255, blue: 229/255))
                                 
                                 Button(action: {
                                     ballonLoginModel.isSign = true
                                 }) {
-                                    Text("Login")
+                                    Text("Sign up for free")
                                         .PlusBold(size: 14)
                                 }
                                 .fullScreenCover(isPresented: $ballonLoginModel.isSign) {

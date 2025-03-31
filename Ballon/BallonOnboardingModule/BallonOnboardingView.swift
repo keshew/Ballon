@@ -11,10 +11,17 @@ struct BallonOnboardingView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.57)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 4.9)
                 
-                Image(.loginRectangle)
-                    .resizable()
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.63)
+                    .cornerRadius(40)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 1.31)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.white, lineWidth: 2)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.63)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.31)
+                    }
                 
                 ScrollView(showsIndicators: false) {
                     VStack {

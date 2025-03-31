@@ -22,25 +22,58 @@ struct BallonMenuView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image(.topMenu)
-                    .resizable()
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
                     .frame(width: geometry.size.width, height: 131)
                     .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 0)
+                            .stroke(.white, lineWidth: 4)
+                            .frame(width: geometry.size.width, height: 131)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                    }
                 
                 Text("Home")
                     .PlusBold(size: 26,
                               color: Color(red: 253/255, green: 190/255, blue: 67/255))
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 21)
                 
-                Image(.ball)
+                Image(.balls)
                     .resizable()
-                    .frame(width: geometry.size.width, height: 760)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.97)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.74)
+                    .overlay {
+                        Color(red: 2/255, green: 74/255, blue: 92/255)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.97)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.74)
+                            .opacity(0.97)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 0)
+                                    .stroke(.white, lineWidth: 2)
+                                    .frame(width: geometry.size.width, height: geometry.size.height * 0.97)
+                                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.74)
+                            }
+                    }
                 
-                Image(.shadow)
+                Image(.ball1Bg)
                     .resizable()
-                    .frame(width: geometry.size.width, height: 760)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                    .frame(width: 90, height: 110)
+                    .position(x: geometry.size.width / 5, y: geometry.size.height / 1.2)
+                
+                Image(.ball2Bg)
+                    .resizable()
+                    .frame(width: 90, height: 110)
+                    .position(x: geometry.size.width / 1.25, y: geometry.size.height / 1.25)
+                
+                Image(.ball3Bg)
+                    .resizable()
+                    .frame(width: 90, height: 110)
+                    .position(x: geometry.size.width / 6, y: geometry.size.height / 3.0)
+
+                Image(.ball4Bg)
+                    .resizable()
+                    .frame(width: 90, height: 110)
+                    .position(x: geometry.size.width / 1.15, y: geometry.size.height / 4.2)
                 
                 ZStack {
                     Image(.whiteRectnagle)
@@ -56,6 +89,8 @@ struct BallonMenuView: View {
                                 .resizable()
                                 .frame(width: 41, height: 41)
                         }
+                        .disabled(UserDefaultsManager().isGuest() ? true : false)
+                        .opacity(UserDefaultsManager().isGuest() ? 0.5 : 1)
                         
                         TextField("0", text: Binding(
                              get: { String(coinCount) },
@@ -119,42 +154,44 @@ struct BallonMenuView: View {
                     }
                     
                 } else {
-                    ScrollView(showsIndicators: false) {
-                        VStack(spacing: 20) {
-                            ForEach(ballonMenuModel.savedBalloons.indices, id: \.self) { index in
-                                if index % 3 == 0 {
-                                    if let balloon = ballonMenuModel.savedBalloons[safe: index] {
-                                        BallView(isDoneModel: $isDone, model: balloon, model2: $model, coinCount: $coinCount) {
-                                            selectedBalloon = balloon
-                                        }
-                                    }
-                                } else if index % 3 == 1 {
-                                    LazyVGrid(columns: [
-                                        GridItem(.flexible(), spacing: 0),
-                                        GridItem(.flexible(), spacing: 0)
-                                    ], spacing: 20) {
+                    if !UserDefaultsManager().isGuest() {
+                        ScrollView(showsIndicators: false) {
+                            VStack(spacing: 20) {
+                                ForEach(ballonMenuModel.savedBalloons.indices, id: \.self) { index in
+                                    if index % 3 == 0 {
                                         if let balloon = ballonMenuModel.savedBalloons[safe: index] {
                                             BallView(isDoneModel: $isDone, model: balloon, model2: $model, coinCount: $coinCount) {
                                                 selectedBalloon = balloon
                                             }
                                         }
-                                        if index + 1 < ballonMenuModel.savedBalloons.count {
-                                            if let balloon = ballonMenuModel.savedBalloons[safe: index + 1] {
+                                    } else if index % 3 == 1 {
+                                        LazyVGrid(columns: [
+                                            GridItem(.flexible(), spacing: 0),
+                                            GridItem(.flexible(), spacing: 0)
+                                        ], spacing: 20) {
+                                            if let balloon = ballonMenuModel.savedBalloons[safe: index] {
                                                 BallView(isDoneModel: $isDone, model: balloon, model2: $model, coinCount: $coinCount) {
                                                     selectedBalloon = balloon
+                                                }
+                                            }
+                                            if index + 1 < ballonMenuModel.savedBalloons.count {
+                                                if let balloon = ballonMenuModel.savedBalloons[safe: index + 1] {
+                                                    BallView(isDoneModel: $isDone, model: balloon, model2: $model, coinCount: $coinCount) {
+                                                        selectedBalloon = balloon
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                
+                                Color(.clear)
+                                    .frame(height: 60)
                             }
-                            
-                            Color(.clear)
-                                .frame(height: 60)
                         }
+                        .frame(height: geometry.size.height * 0.8)
+                        .padding(.top, geometry.size.height * 0.22)
                     }
-                    .frame(height: geometry.size.height * 0.8)
-                    .padding(.top, geometry.size.height * 0.22)
                 }
             }
             .onAppear {

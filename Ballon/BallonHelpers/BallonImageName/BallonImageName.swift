@@ -13,5 +13,6 @@ public enum BallonImageName: String {
     case tab3Picked, tab3, tab2Picked, tab2, tab1Picked, tab1, addSrt, close
     case leftBtn, rightBtn, addBallon
     case it1, it2, it3, it4, it5, it6,it7, it8, it9, it10
-    case close1
+    case close1, ballShadow
+    case balls, ball1bg, ball2bg, ball3bg ,ball4bg
 }

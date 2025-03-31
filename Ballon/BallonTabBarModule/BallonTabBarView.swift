@@ -76,6 +76,9 @@ struct CustomTabBar: View {
                     .frame(maxWidth: .infinity)
                 }
                 .padding(.trailing)
+                .disabled(UserDefaultsManager().isGuest() ? true : false)
+                .opacity(UserDefaultsManager().isGuest() ? 0.5 : 1)
+                
                 Spacer()
             }
             .padding(.top, 5)

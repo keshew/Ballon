@@ -11,17 +11,24 @@ struct BallonSignUpView: View {
                     .frame(width: geometry.size.width, height: geometry.size.height * 0.57)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 4.9)
                 
-                Image(.loginRectangle)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.717)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.46)
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.85)
+                    .cornerRadius(40)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.45)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.white, lineWidth: 2)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.85)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.45)
+                    }
                 
                 ScrollView(showsIndicators: false) {
                     VStack {
                         
-                        Spacer(minLength: geometry.size.height * 0.36)
+                        Spacer(minLength: geometry.size.height * 0.29)
                         
-                        VStack(spacing: 35) {
+                        VStack(spacing: 28) {
                             VStack(spacing: 10) {
                                 Text("Sign up")
                                     .PlusBold(size: 26)
@@ -111,11 +118,42 @@ struct BallonSignUpView: View {
                                         }
                                     
                                     Text("Create account")
-                                        .Plus(size: 14)
+                                        .PlusBold(size: 14)
                                 }
                             }
                             .fullScreenCover(isPresented: $ballonSignUpModel.isLog) {
                                 BallonLoginView()
+                            }
+                            
+                            Button(action: {
+                                UserDefaultsManager().enterAsGuest()
+                                if UserDefaultsManager().isFirstLaunch() {
+                                    ballonSignUpModel.isOnb = true
+                                } else {
+                                    ballonSignUpModel.isGuest = true
+                                }
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .fill(Color(red: 128/255, green: 79/255, blue: 0/255))
+                                        .frame(height: 54)
+                                        .cornerRadius(12)
+                                        .padding(.horizontal, 100)
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(.white, lineWidth: 1)
+                                                .padding(.horizontal, 100)
+                                        }
+                                    
+                                    Text("Log in as guest")
+                                        .PlusBold(size: 14)
+                                }
+                            }
+                            .fullScreenCover(isPresented: $ballonSignUpModel.isGuest) {
+                                BallonTabBarView()
+                            }
+                            .fullScreenCover(isPresented: $ballonSignUpModel.isOnb) {
+                                BallonOnboardingView()
                             }
                             
                             

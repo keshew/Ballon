@@ -7,25 +7,55 @@ struct BallonAddView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image(.topMenu)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.168)
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                    .frame(width: geometry.size.width, height: 131)
                     .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 0)
+                            .stroke(.white, lineWidth: 4)
+                            .frame(width: geometry.size.width, height: 131)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height * 0.0045)
+                    }
                 
-                Image(.ball)
+                Image(.balls)
                     .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.976)
+                    .frame(width: geometry.size.width, height: 760)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                    .overlay {
+                        Color(red: 2/255, green: 74/255, blue: 92/255)
+                            .frame(width: geometry.size.width, height: 760)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                            .opacity(0.97)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 0)
+                                    .stroke(.white, lineWidth: 2)
+                                    .frame(width: geometry.size.width, height: 760)
+                                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
+                            }
+                    }
                 
-                Image(.shadow)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.976)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 1.75)
-                
-                Image(.loginRectangle)
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.544)
+                Rectangle()
+                    .fill(Color(red: 2/255, green: 74/255, blue: 92/255))
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.554)
+                    .cornerRadius(40)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 1.3)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.white, lineWidth: 2)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.554)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 1.3)
+                    }
+                
+                Image(.ball3Bg)
+                    .resizable()
+                    .frame(width: 90, height: 110)
+                    .position(x: geometry.size.width / 6, y: geometry.size.height / 3.0)
+
+                Image(.ball4Bg)
+                    .resizable()
+                    .frame(width: 90, height: 110)
+                    .position(x: geometry.size.width / 1.15, y: geometry.size.height / 4.2)
                     
                 ScrollView(showsIndicators: false) {
                     VStack {
@@ -45,6 +75,7 @@ struct BallonAddView: View {
                                 .PlusBold(size: 26,
                                           color: Color(red: 253/255, green: 190/255, blue: 67/255))
                                 .padding(.trailing, 40)
+                                .offset(y: -2)
                             
                             Spacer()
                         }
