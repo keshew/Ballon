@@ -109,18 +109,22 @@ struct BallonMenuView: View {
                         }
                         
                         TextField("0", text: Binding(
-                             get: { String(coinCount) },
-                             set: { newValue in
-                                 guard let number = Int(newValue) else {
-                                     coinCount = UserDefaults.standard.integer(forKey: "coin")
-                                     return
-                                 }
-                                 if !UserDefaultsManager().isGuest() {
-                                     UserDefaultsManager().saveCoin(number)
-                                     coinCount = number
-                                 }
-                             }
-                         ))
+                            get: {
+                                UserDefaultsManager().isGuest() ? "100" : String(coinCount)
+                            },
+                            set: { newValue in
+                                if UserDefaultsManager().isGuest() {
+                                    coinCount = 0
+                                } else {
+                                    guard let number = Int(newValue) else {
+                                        coinCount = UserDefaults.standard.integer(forKey: "coin")
+                                        return
+                                    }
+                                    UserDefaultsManager().saveCoin(number)
+                                    coinCount = number
+                                }
+                            }
+                        ))
                         .font(.custom("PlusJakartaSans-Regular", size: 20))
                         .minimumScaleFactor(0.8)
                         .foregroundStyle(Color(red: 253/255, green: 190/255, blue: 67/255))

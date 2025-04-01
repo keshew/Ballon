@@ -190,6 +190,7 @@ struct BallonProfileView: View {
                             UserDefaultsManager().saveLoginStatus(false)
                             ballonProfileModel.isLogOut = true
                             UserDefaultsManager().quitQuest()
+                            UserDefaultsManager().logout()
                         }) {
                             ZStack {
                                 Rectangle()

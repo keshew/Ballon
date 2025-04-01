@@ -66,6 +66,7 @@ class UserDefaultsManager: ObservableObject {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "users")
         defaults.removeObject(forKey: "savedBalloons")
+        saveCoin(100)
         saveLoginStatus(false)
     }
     
@@ -94,6 +95,7 @@ class UserDefaultsManager: ObservableObject {
         let defaults = UserDefaults.standard
         saveLoginStatus(false)
         defaults.removeObject(forKey: "savedBalloons")
+        saveCoin(100)
     }
     
     func saveCurrentEmail(_ email: String) {
