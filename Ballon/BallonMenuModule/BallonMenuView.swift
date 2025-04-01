@@ -81,16 +81,32 @@ struct BallonMenuView: View {
                         .frame(width: 137, height: 35)
                     
                     HStack {
-                        Button(action: {
-                            UserDefaultsManager().addCoin()
-                            coinCount = UserDefaults.standard.integer(forKey: "coin")
-                        }) {
-                            Image(.plus)
-                                .resizable()
-                                .frame(width: 41, height: 41)
+                        if UserDefaultsManager().isGuest() {
+                            ZStack {
+                                Circle()
+                                    .fill(.gray)
+                                    .frame(width: 41, height: 41)
+                                Button(action: {
+                                    UserDefaultsManager().addCoin()
+                                    coinCount = UserDefaults.standard.integer(forKey: "coin")
+                                }) {
+                                    Image(.plus)
+                                        .resizable()
+                                        .frame(width: 41, height: 41)
+                                }
+                                .disabled(UserDefaultsManager().isGuest() ? true : false)
+                                .opacity(UserDefaultsManager().isGuest() ? 0.7 : 1)
+                            }
+                        } else {
+                            Button(action: {
+                                UserDefaultsManager().addCoin()
+                                coinCount = UserDefaults.standard.integer(forKey: "coin")
+                            }) {
+                                Image(.plus)
+                                    .resizable()
+                                    .frame(width: 41, height: 41)
+                            }
                         }
-                        .disabled(UserDefaultsManager().isGuest() ? true : false)
-                        .opacity(UserDefaultsManager().isGuest() ? 0.5 : 1)
                         
                         TextField("0", text: Binding(
                              get: { String(coinCount) },
@@ -99,8 +115,10 @@ struct BallonMenuView: View {
                                      coinCount = UserDefaults.standard.integer(forKey: "coin")
                                      return
                                  }
-                                 UserDefaultsManager().saveCoin(number)
-                                 coinCount = number
+                                 if !UserDefaultsManager().isGuest() {
+                                     UserDefaultsManager().saveCoin(number)
+                                     coinCount = number
+                                 }
                              }
                          ))
                         .font(.custom("PlusJakartaSans-Regular", size: 20))
